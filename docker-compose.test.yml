@@ -1,0 +1,34 @@
+version: '2.2'
+
+services:
+  ice_stremlit_test:
+    build:
+      context: ./
+      dockerfile: Dockerfile_R
+        #    networks:
+        #      - my_network
+    image: ice_scrumbot_ollama_test:latest
+    container_name: stremlit_ollama_test
+    ports:
+      - "5120:8501"
+    restart: always
+    extra_hosts:
+      - ollamaservice.com:<ip_address>
+
+  django_test:
+    build:
+      context: ./
+      dockerfile: Dockerfile_D
+        #    networks:
+      #      - my_network
+    ports:
+      - "5121:8200"
+    restart: always
+    image: ice_scrumbot_ollama_django_test:latest
+    container_name: django_ollama_test
+    extra_hosts:
+      - ollamaservice.com:<ip_address>
+
+        #networks:
+        #  my_network:
+        #    driver: bridge 

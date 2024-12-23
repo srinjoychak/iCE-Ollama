@@ -1,0 +1,66 @@
+
+version: '2.2'
+
+services:
+  ice_stremlit:
+    build:
+      context: ./
+      dockerfile: Dockerfile_R
+    networks:
+      - my_network
+    container_name: stremlit_ollama
+    ports:
+      - "5006:8501"
+    restart: always
+    extra_hosts:
+      - ollamaservice.com:<ip_address>
+
+  django:
+    build:
+      context: ./
+      dockerfile: Dockerfile_D
+    networks:
+      - my_network
+    ports:
+      - "8080:8200"
+    restart: always
+    container_name: django_ollama
+    extra_hosts:
+      - ollamaservice.com:<ip_address>
+
+  ollama:
+    image: ollama/ollama:latest
+    networks:
+      - my_network
+    container_name: ollama
+    ports:
+      - "11436:11434"
+    restart: always
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    runtime: nvidia
+    extra_hosts:
+      - ollamaservice.com:<ip_address>
+
+  mongodb:
+    image: mongo:latest
+    networks:
+      - my_network
+    container_name: MongoDB
+    ports:
+      - "27019:27017"
+    restart: always
+    volumes:
+      - ~/streamlit_dump:/data/db
+    extra_hosts:
+      - ollamaservice.com:<ip_address>
+
+networks:
+  my_network:
+    driver: bridge
+

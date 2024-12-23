@@ -1,0 +1,30 @@
+FROM python:3.9-slim-buster
+USER root
+COPY ./ice_django/django_backend /app
+COPY ./.env /app
+WORKDIR /app
+RUN python -m pip install --upgrade pip
+RUN pip install django==4.1.6 && \
+    pip install django-allauth==0.52.0 && \
+    pip install django-cors-headers==3.13.0 && \
+    pip install django-sslserver==0.22 && \
+    pip install djangorestframework==3.14.0 && \
+    pip install PyJWT==2.6.0 && \
+    pip install pymongo==4.3.3 && \
+    pip install python3-openid==3.2.0 && \
+    pip install pytz==2022.7.1 && \
+    pip install requests==2.28.2 && \
+    pip install requests-oauthlib==1.3.1 && \
+    pip install jwt==1.3.1 && \
+    pip install multidict==6.0.4 && \
+    pip install oauthlib==3.2.2 && \
+    pip install openai==0.28&& \
+    pip install python-dotenv==1.0.0&& \
+    pip install atlassian-python-api && \
+    pip install PyGithub && \
+    pip install pandas && \
+    pip install xlsxwriter && \
+    pip install openpyxl && \
+    pip install bardapi==0.1.18
+
+ENTRYPOINT ["python", "manage.py", "runserver", "0.0.0.0:8200"]
